@@ -5,6 +5,7 @@ import { coupons } from "../data/coupons";
 import { getDish } from "../data/menu";
 import { COMBO_DISCOUNT, computeTotals, lineKey, lineUnitPrice } from "../pricing";
 import type { Address, CartLine, Order, OrderStatus, PaymentMethod, SpiceLevel, User } from "../types";
+import { cancelOrderInDb, fetchMyOrders } from "../db";
 import { uid } from "../utils";
 import { createStore } from "./create-store";
 
@@ -237,7 +238,8 @@ export function orderStats(orders: Order[]) {
 }
 export const useOrders = ordersStore.useStore;
 
-export function placeOrder(input: {
+/** Builds an order from the current bag without saving it (see commitOrder). */
+export function prepareOrder(input: {
   customerName: string;
   address: string;
   payment: PaymentMethod;
@@ -275,7 +277,8 @@ export function placeOrder(input: {
     ];
   });
   const newOrder: Order = {
-    id: "SPC-" + Math.floor(50000 + Math.random() * 49999),
+    // Unique across all customers: time-based plus random (e.g. SPC-MG3K9Q-7F2).
+    id: `SPC-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`,
     createdAt: new Date().toISOString(),
     customerName: input.customerName,
     items,
@@ -290,9 +293,13 @@ export function placeOrder(input: {
     couponCode: totals.couponError ? null : code,
     live: true,
   };
-  ordersStore.set((orders) => [newOrder, ...orders]);
-  clearCart();
   return newOrder;
+}
+
+/** Shows a saved order in the account and empties the bag. */
+export function commitOrder(order: Order) {
+  ordersStore.set((orders) => [order, ...orders.filter((o) => o.id !== order.id)]);
+  clearCart();
 }
 
 export function rateOrder(id: string, rating: number) {
@@ -343,9 +350,34 @@ export function restartTrackingDemo(id: string) {
   );
 }
 
-export function cancelOrder(id: string) {
+export async function cancelOrder(id: string) {
+  const previous = ordersStore.get().find((o) => o.id === id);
   ordersStore.set((orders) => orders.map((o) => (o.id === id ? { ...o, status: "cancelled", live: false } : o)));
+  if (userStore.get()?.verified) {
+    const result = await cancelOrderInDb(id);
+    if (!result.ok && previous) {
+      ordersStore.set((orders) => orders.map((o) => (o.id === id ? previous : o)));
+      toast({ title: "Couldn't cancel the order", description: result.error, tone: "error" });
+      return;
+    }
+  }
   toast({ title: `Order ${id} cancelled`, tone: "error" });
+}
+
+/** Replaces this device's order list with the signed-in customer's orders from the database. */
+export async function syncOrdersFromDb() {
+  if (!userStore.get()?.verified) return;
+  const remote = await fetchMyOrders();
+  if (!remote) return;
+  ordersStore.set((local) => {
+    const localById = new Map(local.map((o) => [o.id, o]));
+    const merged = remote.map((o) => {
+      const mine = localById.get(o.id);
+      // Keep this device's rating and live-tracking state for orders it already knows.
+      return mine ? { ...o, rated: mine.rated, live: mine.live && o.status !== "cancelled", createdAt: mine.createdAt } : o;
+    });
+    return merged;
+  });
 }
 
 /* -------------------------------- Addresses ------------------------------- */

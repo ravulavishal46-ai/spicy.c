@@ -89,8 +89,21 @@ Supabase team and only a few emails per hour. For real users, add an email servi
 The connection details live in `src/lib/supabase/client.ts` (the publishable key is safe to
 ship in the browser). To use another project, copy `.env.example` to `.env.local` and change them.
 
-> Ordering is checked in the browser for now. When orders move into the Supabase database,
-> database security rules will enforce the same "verified email only" rule on the server.
+### Database tables (Supabase → Table Editor)
+
+| Table | What it holds |
+| --- | --- |
+| `profiles` | One row per registered customer (created automatically on first verified sign-in): name, email, phone, heat preference, sign-up and last sign-in time |
+| `orders` | Every order placed: order number, customer, address, payment method, coupon, totals, status, time |
+| `order_items` | The dishes in each order: dish, quantity, unit price, spice level, details |
+
+Orders are saved to the database before the confirmation page shows. Row-level security lets each
+customer read only their own profile and orders, place orders only as themselves, and only cancel
+orders that haven't started cooking; anonymous visitors can't read any of these tables. You (the
+project owner) see everything in the Supabase dashboard.
+
+> Totals are still calculated in the browser. Before taking real payments, move price and coupon
+> calculation into the database (a server-side function) so totals can't be altered.
 
 ---
 

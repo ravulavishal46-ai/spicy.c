@@ -8,7 +8,8 @@ import { Field, Input } from "@/components/ui/field";
 import { EmptyState, Skeleton } from "@/components/ui/misc";
 import { FoodImage } from "@/components/ui/food-image";
 import { lineUnitPrice } from "@/lib/pricing";
-import { placeOrder, saveAddress, useAddresses, useCanOrder, useCart, useCartTotals, useUser } from "@/lib/store";
+import { saveOrder } from "@/lib/db";
+import { commitOrder, prepareOrder, saveAddress, useAddresses, useCanOrder, useCart, useCartTotals, useUser } from "@/lib/store";
 import { useHydrated } from "@/lib/store/create-store";
 import type { PaymentMethod } from "@/lib/types";
 import { cn, money } from "@/lib/utils";
@@ -177,11 +178,19 @@ function CheckoutForm() {
       const a = addresses.find((x) => x.id === addressId)!;
       address = `${a.line1}, ${a.city} ${a.pincode}`;
     }
-    const order = placeOrder({ customerName: form.name.trim(), address, payment });
+    const order = prepareOrder({ customerName: form.name.trim(), address, payment });
     if (!order) {
       setSubmitting(false);
       return;
     }
+    // The order only counts once it's saved in the database.
+    const saved = await saveOrder(order, { email: user?.email ?? form.email.trim(), phone: form.phone.trim() });
+    if (!saved.ok) {
+      setSubmitting(false);
+      setPaymentError(saved.error);
+      return;
+    }
+    commitOrder(order);
     router.push(`/account/orders/${order.id}?placed=1`);
   }
 

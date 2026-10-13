@@ -7,6 +7,7 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { SpiceMeter } from "@/components/shop/spice-meter";
 import { signOut } from "@/lib/auth";
+import { saveProfile } from "@/lib/db";
 import { orderStats, toast, useFavorites, useOrders, userStore, useUser } from "@/lib/store";
 import type { SpiceLevel } from "@/lib/types";
 import { formatDate, money } from "@/lib/utils";
@@ -33,7 +34,14 @@ export function Profile() {
     setErrors(errs);
     if (errs.name || errs.phone) return;
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 500));
+    if (user.verified) {
+      const result = await saveProfile({ name, email: user.email, phone, heatPreference: heat });
+      if (!result.ok) {
+        setSaving(false);
+        toast({ title: "Couldn't save your profile", description: result.error, tone: "error" });
+        return;
+      }
+    }
     userStore.set({ ...user, name: name.trim(), phone: phone.trim(), heatPreference: heat });
     setSaving(false);
     toast({ title: "Profile updated", tone: "success" });

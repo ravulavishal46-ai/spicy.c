@@ -1,7 +1,8 @@
 "use client";
 
 import type { AuthError } from "@supabase/supabase-js";
-import { DEMO_EMAIL, signIn, signOutLocal, toast, userStore } from "./store";
+import { saveProfile } from "./db";
+import { DEMO_EMAIL, signIn, signOutLocal, syncOrdersFromDb, toast, userStore } from "./store";
 import { supabase } from "./supabase/client";
 import type { SpiceLevel } from "./types";
 
@@ -59,7 +60,11 @@ export async function verifyEmailCode(
     if (error || !data.session || !data.user) return { ok: false, error: friendly(error, "verify") };
     // Keep the typed name on the Supabase account too (best effort).
     void supabase().auth.updateUser({ data: { name: name.trim() } });
-    signIn({ name, email: data.user.email ?? email.trim(), verified: true, ...extra });
+    const verifiedEmail = data.user.email ?? email.trim();
+    signIn({ name, email: verifiedEmail, verified: true, ...extra });
+    // Record the registration and load this customer's orders (best effort).
+    await saveProfile({ name, email: verifiedEmail, heatPreference: extra.heatPreference });
+    await syncOrdersFromDb();
     return { ok: true };
   } catch (e) {
     return { ok: false, error: friendly(e as Error, "verify") };
@@ -99,6 +104,7 @@ export function startAuthSync() {
         const metaName = (session.user.user_metadata?.name as string | undefined)?.trim();
         signIn({ name: current?.email.toLowerCase() === email.toLowerCase() ? current.name : metaName || email.split("@")[0], email, verified: true });
       }
+      void syncOrdersFromDb();
     } else if (current?.verified) {
       signOutLocal();
     }
