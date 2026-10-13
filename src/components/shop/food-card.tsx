@@ -56,7 +56,7 @@ export function FoodCard({ dish, priority, className }: { dish: Dish; priority?:
           src={dish.image}
           alt={dish.name}
           priority={priority}
-          className="aspect-[4/3.4] w-full [&_img]:group-hover:scale-[1.06]"
+          className="aspect-[4/3] w-full [&_img]:group-hover:scale-[1.06]"
           sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, (min-width: 480px) 50vw, 100vw"
         />
         {badge && (
@@ -106,7 +106,7 @@ export function FoodCard({ dish, priority, className }: { dish: Dish; priority?:
 export function FoodCardSkeleton() {
   return (
     <div aria-hidden className="flex flex-col">
-      <div className="skeleton aspect-[4/3.4] w-full rounded-[var(--radius-card)]" />
+      <div className="skeleton aspect-[4/3] w-full rounded-[var(--radius-card)]" />
       <div className="skeleton mt-4 h-4 w-24" />
       <div className="skeleton mt-3 h-6 w-3/4" />
       <div className="skeleton mt-2 h-4 w-full" />

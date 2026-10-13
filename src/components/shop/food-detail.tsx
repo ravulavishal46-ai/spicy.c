@@ -37,10 +37,10 @@ export function FoodDetail({ dish }: { dish: Dish }) {
         </nav>
       </div>
 
-      <section className="container-x grid gap-10 pb-16 pt-6 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+      <section className="container-x grid gap-10 pb-16 pt-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <div className="relative overflow-hidden rounded-[2rem] rounded-bl-[6rem]">
-            <FoodImage src={dish.image} alt={`${dish.name}: ${dish.short}`} priority className="aspect-[4/4.2] w-full" sizes="(min-width: 1024px) 50vw, 100vw" />
+          <div className="relative mx-auto max-w-[460px] overflow-hidden rounded-[2rem] rounded-bl-[4rem] lg:mx-0">
+            <FoodImage src={dish.image} alt={`${dish.name}: ${dish.short}`} priority className="aspect-square w-full" sizes="(min-width: 1024px) 460px, 90vw" />
             <FavoriteButton dish={dish} className="absolute right-4 top-4 h-12 w-12" />
             {dish.badges[0] && (
               <span className="absolute left-4 top-4 rounded-full bg-cream px-3 py-1.5 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em]">
@@ -48,7 +48,7 @@ export function FoodDetail({ dish }: { dish: Dish }) {
               </span>
             )}
           </div>
-          <dl className="mt-4 grid grid-cols-3 gap-3">
+          <dl className="mx-auto mt-4 grid max-w-[460px] grid-cols-3 gap-3 lg:mx-0">
             {[
               { icon: Clock, label: "Ready in", value: `${dish.prepMinutes} min` },
               { icon: Flame, label: "Energy", value: `${dish.calories} kcal` },

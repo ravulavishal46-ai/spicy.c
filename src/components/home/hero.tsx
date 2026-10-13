@@ -62,21 +62,21 @@ export function Hero() {
           </dl>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[560px] lg:mr-0">
-          <div className="absolute -right-6 -top-6 h-40 w-40 rounded-full bg-saffron sm:h-56 sm:w-56" aria-hidden />
-          <div className="absolute -bottom-8 -left-8 h-24 w-24 rounded-full border-[10px] border-chili sm:h-32 sm:w-32" aria-hidden />
-          <div className="relative animate-[rise_1s_var(--ease-out-expo)_both] overflow-hidden rounded-[2.25rem] rounded-tr-[7rem] shadow-[var(--shadow-lift)]">
+        <div className="relative mx-auto w-full max-w-[400px] lg:mr-8">
+          <div className="absolute -right-5 -top-5 h-28 w-28 rounded-full bg-saffron sm:h-36 sm:w-36" aria-hidden />
+          <div className="absolute -bottom-6 -left-6 h-20 w-20 rounded-full border-[8px] border-chili sm:h-24 sm:w-24" aria-hidden />
+          <div className="relative animate-[rise_1s_var(--ease-out-expo)_both] overflow-hidden rounded-[2rem] rounded-tr-[5rem] shadow-[var(--shadow-lift)]">
             <FoodImage
               src={feature.image.replace("w=1200", "w=1400")}
               alt={`${feature.name}: ${feature.short}`}
               priority
-              className="aspect-[4/5] w-full"
-              sizes="(min-width: 1024px) 45vw, 100vw"
+              className="aspect-[4/4.6] w-full"
+              sizes="(min-width: 1024px) 400px, 90vw"
             />
           </div>
 
           {/* floating stamp */}
-          <div className="absolute -left-3 top-8 grid h-28 w-28 rotate-[-12deg] animate-[pop_0.8s_var(--ease-spring)_0.6s_both] place-items-center rounded-full bg-chili text-center text-white shadow-xl sm:-left-10 sm:h-32 sm:w-32">
+          <div className="absolute -left-3 top-8 grid h-24 w-24 rotate-[-12deg] animate-[pop_0.8s_var(--ease-spring)_0.6s_both] place-items-center rounded-full bg-chili text-center text-white shadow-xl sm:-left-8 sm:h-28 sm:w-28">
             <div>
               <ChiliIcon className="mx-auto h-6 w-6 text-saffron" />
               <p className="mt-1 font-display text-lg font-semibold leading-none">Inferno</p>

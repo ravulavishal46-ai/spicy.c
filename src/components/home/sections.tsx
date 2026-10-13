@@ -30,7 +30,7 @@ export function CategoryRail() {
                     src={c.image}
                     alt=""
                     label={c.name}
-                    className="aspect-[3/4] w-full [&_img]:group-hover:scale-[1.07]"
+                    className="aspect-[4/5] w-full [&_img]:group-hover:scale-[1.07]"
                     sizes="(min-width: 1024px) 20vw, 60vw"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-charcoal/85 via-charcoal/10 to-transparent" aria-hidden />

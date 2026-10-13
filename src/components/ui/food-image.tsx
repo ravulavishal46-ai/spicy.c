@@ -78,12 +78,12 @@ function Fallback({ label, tone }: { label: string; tone: "dark" | "warm" }) {
       </svg>
       <div
         aria-hidden
-        className={cn("absolute h-3/4 w-3/4 rounded-full", p.blobA, flip ? "-bottom-1/4 -right-1/4" : "-bottom-1/3 -left-1/4")}
+        className={cn("absolute h-1/2 w-1/2 rounded-full", p.blobA, flip ? "-bottom-1/4 -right-1/6" : "-bottom-1/4 -left-1/6")}
       />
-      <div aria-hidden className={cn("absolute h-1/3 w-1/3 rounded-full", p.blobB, flip ? "-left-6 -top-6" : "-right-4 top-6")} />
+      <div aria-hidden className={cn("absolute h-1/4 w-1/4 rounded-full", p.blobB, flip ? "-left-4 -top-4" : "-right-3 top-4")} />
       <div className="relative flex flex-col items-center gap-1">
-        <span className="font-display text-[clamp(2.5rem,8vw,6rem)] font-semibold italic leading-none">{initial}</span>
-        <ChiliIcon className={cn("h-5 w-5", p.chili)} />
+        <span className="font-display text-[clamp(1.75rem,4vw,3rem)] font-semibold italic leading-none">{initial}</span>
+        <ChiliIcon className={cn("h-4 w-4", p.chili)} />
       </div>
     </div>
   );
