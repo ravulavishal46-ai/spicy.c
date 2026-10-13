@@ -11,7 +11,7 @@
 import { build } from "esbuild";
 import postcss from "postcss";
 import tailwind from "@tailwindcss/postcss";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -46,6 +46,30 @@ const result = await build({
   legalComments: "none",
 });
 
+// 3) Images: embed the project's photos (public/images) as small data URIs, because the
+//    artifact viewer can't load images from other sites.
+async function embedImages() {
+  const dir = path.join(root, "public/images");
+  if (!existsSync(dir)) return {};
+  let sharp = null;
+  try {
+    sharp = (await import("sharp")).default;
+  } catch {
+    console.warn("sharp not available — embedding full-size images");
+  }
+  const map = {};
+  const walk = (d) => readdirSync(d).flatMap((f) => (statSync(path.join(d, f)).isDirectory() ? walk(path.join(d, f)) : [path.join(d, f)]));
+  for (const file of walk(dir).filter((f) => /\.(jpe?g|png|webp)$/i.test(f))) {
+    const url = "/" + path.relative(path.join(root, "public"), file).split(path.sep).join("/");
+    const width = url.startsWith("/images/site/") ? 900 : 560;
+    const buf = sharp ? await sharp(file).resize({ width, withoutEnlargement: true }).jpeg({ quality: 72, mozjpeg: true }).toBuffer() : readFileSync(file);
+    map[url] = `data:image/jpeg;base64,${buf.toString("base64")}`;
+  }
+  return map;
+}
+const images = await embedImages();
+const imagesJs = `window.__SPICY_IMAGES=${JSON.stringify(images)};`;
+
 const js = result.outputFiles[0].text.replace(/<\/script/gi, "<\\/script");
 const css = rawCss.replace(/<\/style/gi, "<\\/style");
 
@@ -67,8 +91,9 @@ html, body { min-height: 100%; background: #fff7ed; color: #141414; }
 </style>
 <style>${css}</style>
 <div id="spicy-root"></div>
+<script>${imagesJs}</script>
 <script>${js}</script>
 `;
 
 writeFileSync(out, html);
-console.log(`Wrote ${out} (${(html.length / 1024).toFixed(0)} KB)`);
+console.log(`Wrote ${out} (${(html.length / 1024).toFixed(0)} KB, ${Object.keys(images).length} images embedded)`);

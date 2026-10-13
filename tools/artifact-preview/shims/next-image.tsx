@@ -10,12 +10,19 @@ type ImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
   quality?: number;
 };
 
-/** Drop-in for next/image in the single-file preview: a plain <img>. */
-export default function Image({ fill, priority, quality, style, alt, ...rest }: ImageProps) {
+declare global {
+  interface Window {
+    __SPICY_IMAGES?: Record<string, string>;
+  }
+}
+
+/** Drop-in for next/image in the single-file preview: a plain <img> using embedded photos. */
+export default function Image({ fill, priority, quality, style, alt, src, ...rest }: ImageProps) {
   void quality;
   return (
     <img
       {...rest}
+      src={window.__SPICY_IMAGES?.[src] ?? src}
       alt={alt ?? ""}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
