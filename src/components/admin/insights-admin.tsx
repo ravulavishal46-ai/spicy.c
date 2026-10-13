@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { RotateCcw, Save } from "lucide-react";
+import { Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Modal } from "@/components/ui/dialog";
 import { Field, Input, Select } from "@/components/ui/field";
 import { Badge } from "@/components/ui/misc";
 import { type AuditEvent, dailySeries, ordersByHour, type StoreSettings } from "@/lib/admin/data";
-import { adminAudit, adminOrders, adminSettings, done, resetAdminDemo } from "@/lib/admin/store";
+import { adminAudit, adminOrders, adminSettings, done } from "@/lib/admin/store";
 import { categories, getDish } from "@/lib/data/menu";
 import { spiceLevels } from "@/lib/data/spice";
 import { toast } from "@/lib/store";
@@ -137,7 +136,6 @@ function StoreSettingsForm() {
   const saved = adminSettings.useStore();
   const [s, setS] = useState<StoreSettings>(saved);
   const [errors, setErrors] = useState<Partial<Record<keyof StoreSettings, string | null>>>({});
-  const [confirmReset, setConfirmReset] = useState(false);
   const dirty = JSON.stringify(s) !== JSON.stringify(saved);
 
   function set<K extends keyof StoreSettings>(k: K, v: StoreSettings[K]) {
@@ -207,35 +205,8 @@ function StoreSettingsForm() {
               Discard
             </Button>
           )}
-          <Button variant="danger" className="ml-auto" onClick={() => setConfirmReset(true)}>
-            <RotateCcw className="h-4 w-4" aria-hidden /> Reset demo data
-          </Button>
         </div>
       </div>
-      <Modal
-        open={confirmReset}
-        onClose={() => setConfirmReset(false)}
-        size="sm"
-        title="Reset all admin demo data?"
-        description="Orders, menu, coupons, inventory, reviews, settings and the audit log go back to their original mock state."
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setConfirmReset(false)}>Cancel</Button>
-            <Button
-              onClick={() => {
-                resetAdminDemo();
-                setS(adminSettings.get());
-                setConfirmReset(false);
-                toast({ title: "Admin demo data reset" });
-              }}
-            >
-              Reset
-            </Button>
-          </>
-        }
-      >
-        <p className="text-ash">This only affects data stored in this browser.</p>
-      </Modal>
     </form>
   );
 }

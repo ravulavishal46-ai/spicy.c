@@ -354,9 +354,3 @@ export function toast(t: Omit<Toast, "id">) {
 export function dismissToast(id: string) {
   toastStore.set((list) => list.filter((t) => t.id !== id));
 }
-
-/* ---------------------------- Demo housekeeping --------------------------- */
-
-export function resetCustomerDemo() {
-  [cartStore, couponStore, favoritesStore, userStore, ordersStore, addressStore, accountsStore].forEach((s) => s.reset());
-}

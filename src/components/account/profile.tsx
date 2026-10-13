@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, RotateCcw } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Modal } from "@/components/ui/dialog";
 import { Field, Input } from "@/components/ui/field";
 import { SpiceMeter } from "@/components/shop/spice-meter";
-import { orderStats, resetCustomerDemo, signOut, toast, useFavorites, useOrders, userStore, useUser } from "@/lib/store";
+import { orderStats, signOut, toast, useFavorites, useOrders, userStore, useUser } from "@/lib/store";
 import type { SpiceLevel } from "@/lib/types";
 import { formatDate, money } from "@/lib/utils";
 import { validators } from "@/lib/validation";
@@ -23,7 +22,6 @@ export function Profile() {
   const [heat, setHeat] = useState<SpiceLevel>(user.heatPreference);
   const [errors, setErrors] = useState<{ name?: string | null; phone?: string | null }>({});
   const [saving, setSaving] = useState(false);
-  const [confirmReset, setConfirmReset] = useState(false);
 
   const stats = orderStats(orders);
   const dirty = name !== user.name || phone !== user.phone || heat !== user.heatPreference;
@@ -105,38 +103,7 @@ export function Profile() {
         >
           <LogOut className="h-4 w-4" aria-hidden /> Sign out
         </Button>
-        <Button variant="danger" onClick={() => setConfirmReset(true)}>
-          <RotateCcw className="h-4 w-4" aria-hidden /> Reset demo data
-        </Button>
       </div>
-
-      <Modal
-        open={confirmReset}
-        onClose={() => setConfirmReset(false)}
-        title="Reset demo data?"
-        description="This clears your bag, favorites, addresses and orders in this browser and signs you out."
-        size="sm"
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setConfirmReset(false)}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                resetCustomerDemo();
-                setConfirmReset(false);
-                toast({ title: "Demo data reset" });
-                router.push("/");
-              }}
-            >
-              Reset everything
-            </Button>
-          </>
-        }
-      >
-        <p className="text-ash">Nothing real is deleted — this only affects the mock data saved in your browser.</p>
-      </Modal>
     </>
   );
 }

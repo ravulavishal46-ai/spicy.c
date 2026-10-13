@@ -50,12 +50,6 @@ export function done(area: AuditEvent["area"], action: string, target: string, d
   });
 }
 
-export function resetAdminDemo() {
-  [adminOrders, adminDishes, adminCategories, adminCustomers, adminCoupons, adminInventory, adminReviews, adminAudit, adminSettings].forEach((s) =>
-    s.reset(),
-  );
-}
-
 export type StockLevel = "ok" | "low" | "critical";
 
 export function stockLevel(stock: number, par: number): StockLevel {

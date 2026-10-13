@@ -60,8 +60,7 @@ Useful extras:
 
 Each signed-in account (by email) keeps its own orders, favorites and addresses — a new user starts at zero, and the profile’s Orders, Favorites and Spent figures are calculated from that account’s own orders (cancelled orders excluded).
 
-To start fresh, use **Reset demo data** on `/account` (customer side) or
-`/admin/settings` (admin side).
+All data is kept in your browser; clearing your browser's site data starts everything fresh.
 
 ---
 
