@@ -31,7 +31,7 @@ export function Profile() {
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
-    const errs = { name: validators.name(name), phone: validators.phone(phone) };
+    const errs = { name: validators.name(name), phone: phone.trim() ? validators.phone(phone) : null };
     setErrors(errs);
     if (errs.name || errs.phone) return;
     setSaving(true);
@@ -68,7 +68,7 @@ export function Profile() {
             {(p) => <Input {...p} value={user.email} disabled />}
           </Field>
           <Field label="Mobile" error={errors.phone}>
-            {(p) => <Input {...p} value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" />}
+            {(p) => <Input {...p} value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" placeholder="Add a mobile number" />}
           </Field>
         </div>
         <div>

@@ -1,13 +1,14 @@
 import type { Address, Order, Review, User } from "../types";
 
-/* Fictional demo customer — not a real person. */
-export const demoUser: User = {
-  name: "Aarav Demo",
-  email: "demo@spicy.test",
-  phone: "+91 90000 00000",
+/** Profile defaults for a simulated sign-in. The name always comes from the user. */
+export const defaultProfile: Omit<User, "name" | "email"> = {
+  phone: "",
   memberSince: "2025-03-14",
-  heatPreference: 4,
+  heatPreference: 3,
 };
+
+/** Email used by the "quick demo sign-in" button. */
+export const DEMO_EMAIL = "demo@spicy.test";
 
 export const demoAddresses: Address[] = [
   {
@@ -46,7 +47,7 @@ function order(
   return {
     id,
     createdAt,
-    customerName: demoUser.name,
+    customerName: "You",
     items,
     subtotal,
     discount,

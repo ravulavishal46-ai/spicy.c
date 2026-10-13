@@ -8,7 +8,7 @@ import { useSyncExternalStore } from "react";
  * matches; the browser then switches to whatever is saved in localStorage.
  * This is mock persistence for the prototype — there is no backend.
  */
-export function createStore<T>(key: string, initial: T, options: { persist?: boolean } = {}) {
+export function createStore<T>(key: string, initial: T, options: { persist?: boolean; migrate?: (saved: T) => T } = {}) {
   const persist = options.persist ?? true;
   const storageKey = `spicy:${key}`;
   let state: T = initial;
@@ -22,6 +22,7 @@ export function createStore<T>(key: string, initial: T, options: { persist?: boo
     try {
       const raw = window.localStorage.getItem(storageKey);
       if (raw) state = JSON.parse(raw) as T;
+      if (raw && options.migrate) state = options.migrate(state);
     } catch {
       // Corrupt or unavailable storage: fall back to the initial value.
     }

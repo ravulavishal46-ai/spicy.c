@@ -1,6 +1,6 @@
 "use client";
 
-import { demoAddresses, demoOrders, demoUser } from "../data/account";
+import { defaultProfile, demoAddresses, demoOrders } from "../data/account";
 import { coupons } from "../data/coupons";
 import { getDish } from "../data/menu";
 import { COMBO_DISCOUNT, computeTotals, lineKey, lineUnitPrice } from "../pricing";
@@ -118,12 +118,23 @@ export function toggleFavorite(dishId: string) {
 
 /* ------------------------------- Fake auth -------------------------------- */
 
-export const userStore = createStore<User | null>("user", null);
+export const userStore = createStore<User | null>("user", null, {
+  // Sessions saved by an earlier version used a placeholder name; ask again instead.
+  migrate: (saved) => (saved && saved.name.trim() && saved.name !== "Aarav Demo" ? saved : null),
+});
 export const useUser = userStore.useStore;
 
-/** Simulated sign-in. Nothing leaves the browser. */
-export function signIn(user: Partial<User> & { email: string }) {
-  userStore.set({ ...demoUser, ...user });
+/** Simulated sign-in. Nothing leaves the browser. The name is always the one the user typed. */
+export function signIn(user: Partial<User> & { name: string; email: string }) {
+  const existing = userStore.get();
+  const sameAccount = existing && existing.email.toLowerCase() === user.email.toLowerCase();
+  userStore.set({
+    ...defaultProfile,
+    memberSince: new Date().toISOString(),
+    ...(sameAccount ? existing : {}),
+    ...user,
+    name: user.name.trim(),
+  });
   if (favoritesStore.get().length === 0) {
     favoritesStore.set(["the-scorcher", "chili-oil-dumplings", "ember-chicken-bowl", "mango-lassi"]);
   }

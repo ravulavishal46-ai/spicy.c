@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Heart, LogOut, MapPin, Receipt, Sparkles, UserRound } from "lucide-react";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { Heart, LogOut, MapPin, Receipt, UserRound } from "lucide-react";
+import { ButtonLink } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/misc";
-import { signIn, signOut, useUser } from "@/lib/store";
+import { signOut, useUser } from "@/lib/store";
 import { useHydrated } from "@/lib/store/create-store";
 import { cn } from "@/lib/utils";
 
@@ -48,15 +48,9 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
         <p className="mt-3 max-w-md text-ash">Your orders, favorites and saved addresses live in your SPICY account.</p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <ButtonLink href={`/login?next=${encodeURIComponent(pathname)}`}>Sign in</ButtonLink>
-          <Button
-            variant="dark"
-            onClick={() => {
-              signIn({ email: "demo@spicy.test" });
-              router.refresh();
-            }}
-          >
-            <Sparkles className="h-4 w-4 text-saffron" aria-hidden /> Use demo account
-          </Button>
+<ButtonLink href={`/register?next=${encodeURIComponent(pathname)}`} variant="outline">
+            Create account
+          </ButtonLink>
         </div>
       </div>
     );

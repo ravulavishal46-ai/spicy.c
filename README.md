@@ -54,7 +54,7 @@ Useful extras:
 | Cart drawer | Change quantities, apply `HEAT20`, try a bad code |
 | `/checkout` | Submit empty to see validation; card `4242 4242 4242 4242` succeeds, `4000 0000 0000 0002` is declined |
 | After checkout | Watch the order move through each stage (≈1 minute); “Replay tracking demo” restarts it |
-| `/login` | “Continue with demo account” unlocks Smart Reorder and personalised picks |
+| `/login` | Enter your name, then “Quick demo sign-in” — your name appears on your profile; unlocks Smart Reorder and personalised picks |
 | `/menu?simulate=error` | See the error state |
 | `/admin` | Advance orders, edit dishes, restock inventory, moderate reviews — all logged in **Settings → Audit activity** |
 
