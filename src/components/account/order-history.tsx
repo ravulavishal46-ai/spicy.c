@@ -8,6 +8,7 @@ import { FoodImage } from "@/components/ui/food-image";
 import { Badge, EmptyState, Stars } from "@/components/ui/misc";
 import { SmartReorder } from "@/components/shop/smart-reorder";
 import { getDish } from "@/lib/data/menu";
+import { frequentItems } from "@/lib/discovery";
 import { liveStatus, reorder, TRACKING_STAGES, useOrders } from "@/lib/store";
 import type { OrderStatus } from "@/lib/types";
 import { cn, formatDate, money, pluralize } from "@/lib/utils";
@@ -40,9 +41,11 @@ export function OrderHistory() {
     <>
       <AccountHeading eyebrow={pluralize(orders.length, "order")} title="Order history" />
 
-      <div className="mb-10 rounded-[1.75rem] bg-cream-200/70 p-5 sm:p-7">
-        <SmartReorder />
-      </div>
+      {frequentItems(orders, 1).length > 0 && (
+        <div className="mb-10 rounded-[1.75rem] bg-cream-200/70 p-5 sm:p-7">
+          <SmartReorder />
+        </div>
+      )}
 
       <div role="tablist" aria-label="Filter orders" className="mb-6 flex flex-wrap gap-2">
         {tabs.map((t) => {
@@ -70,8 +73,14 @@ export function OrderHistory() {
       {filtered.length === 0 ? (
         <EmptyState
           icon={<Receipt className="h-9 w-9" />}
-          title={tab === "active" ? "No active orders" : "No orders here"}
-          body={tab === "active" ? "Hungry? Your next order will show up here while it's on its way." : "Orders matching this filter will appear here."}
+          title={orders.length === 0 ? "No orders yet" : tab === "active" ? "No active orders" : "No orders here"}
+          body={
+            orders.length === 0
+              ? "Your orders will show up here once you place your first one."
+              : tab === "active"
+                ? "Hungry? Your next order will show up here while it's on its way."
+                : "Orders matching this filter will appear here."
+          }
           action={<ButtonLink href="/menu">Order something</ButtonLink>}
         />
       ) : (

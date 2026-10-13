@@ -58,6 +58,8 @@ Useful extras:
 | `/menu?simulate=error` | See the error state |
 | `/admin` | Advance orders, edit dishes, restock inventory, moderate reviews — all logged in **Settings → Audit activity** |
 
+Each signed-in account (by email) keeps its own orders, favorites and addresses — a new user starts at zero, and the profile’s Orders, Favorites and Spent figures are calculated from that account’s own orders (cancelled orders excluded).
+
 To start fresh, use **Reset demo data** on `/account` (customer side) or
 `/admin/settings` (admin side).
 

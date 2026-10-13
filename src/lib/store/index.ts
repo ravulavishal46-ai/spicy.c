@@ -1,6 +1,6 @@
 "use client";
 
-import { defaultProfile, demoAddresses, demoOrders } from "../data/account";
+import { defaultProfile } from "../data/account";
 import { coupons } from "../data/coupons";
 import { getDish } from "../data/menu";
 import { COMBO_DISCOUNT, computeTotals, lineKey, lineUnitPrice } from "../pricing";
@@ -106,7 +106,14 @@ export function removeCoupon() {
 
 /* -------------------------------- Favorites ------------------------------- */
 
-export const favoritesStore = createStore<string[]>("favorites", []);
+// Sample data shipped by earlier versions of the prototype; removed when found in saved data.
+const LEGACY_ORDER_IDS = new Set(["SPC-48213", "SPC-47790", "SPC-46902", "SPC-46118", "SPC-45577"]);
+const LEGACY_ADDRESS_IDS = new Set(["addr-home", "addr-work"]);
+const LEGACY_FAVORITES = "the-scorcher,chili-oil-dumplings,ember-chicken-bowl,mango-lassi";
+
+export const favoritesStore = createStore<string[]>("favorites", [], {
+  migrate: (saved) => (saved.join(",") === LEGACY_FAVORITES ? [] : saved),
+});
 export const useFavorites = favoritesStore.useStore;
 
 export function toggleFavorite(dishId: string) {
@@ -124,30 +131,67 @@ export const userStore = createStore<User | null>("user", null, {
 });
 export const useUser = userStore.useStore;
 
+/* Each account (and the signed-out guest) keeps its own orders, favorites and
+   addresses, so a brand-new user always starts at zero. */
+
+interface AccountData {
+  profile: User | null;
+  orders: Order[];
+  favorites: string[];
+  addresses: Address[];
+}
+
+const GUEST = "guest";
+export const accountsStore = createStore<Record<string, AccountData>>("accounts", {});
+
+const accountKey = (u: { email: string } | null) => (u ? u.email.trim().toLowerCase() : GUEST);
+
+function switchAccount(from: string, to: string) {
+  if (from === to) return;
+  // Save what's on screen for the account we're leaving…
+  accountsStore.set((all) => ({
+    ...all,
+    [from]: { profile: userStore.get(), orders: ordersStore.get(), favorites: favoritesStore.get(), addresses: addressStore.get() },
+  }));
+  // …and load the account we're switching to (empty for a new user).
+  const data = accountsStore.get()[to];
+  ordersStore.set(data?.orders ?? []);
+  favoritesStore.set(data?.favorites ?? []);
+  addressStore.set(data?.addresses ?? []);
+}
+
 /** Simulated sign-in. Nothing leaves the browser. The name is always the one the user typed. */
 export function signIn(user: Partial<User> & { name: string; email: string }) {
-  const existing = userStore.get();
-  const sameAccount = existing && existing.email.toLowerCase() === user.email.toLowerCase();
+  const current = userStore.get();
+  const key = accountKey(user);
+  switchAccount(accountKey(current), key);
+  const saved = key === accountKey(current) ? current : accountsStore.get()[key]?.profile;
   userStore.set({
     ...defaultProfile,
     memberSince: new Date().toISOString(),
-    ...(sameAccount ? existing : {}),
+    ...(saved ?? {}),
     ...user,
     name: user.name.trim(),
   });
-  if (favoritesStore.get().length === 0) {
-    favoritesStore.set(["the-scorcher", "chili-oil-dumplings", "ember-chicken-bowl", "mango-lassi"]);
-  }
 }
 
 export function signOut() {
+  switchAccount(accountKey(userStore.get()), GUEST);
   userStore.set(null);
   toast({ title: "Signed out" });
 }
 
 /* --------------------------------- Orders --------------------------------- */
 
-export const ordersStore = createStore<Order[]>("orders", demoOrders);
+export const ordersStore = createStore<Order[]>("orders", [], {
+  migrate: (saved) => saved.filter((o) => !LEGACY_ORDER_IDS.has(o.id)),
+});
+
+/** Orders that count toward totals (cancelled orders are excluded). */
+export function orderStats(orders: Order[]) {
+  const counted = orders.filter((o) => o.status !== "cancelled");
+  return { count: counted.length, spent: counted.reduce((sum, o) => sum + o.total, 0) };
+}
 export const useOrders = ordersStore.useStore;
 
 export function placeOrder(input: {
@@ -261,7 +305,9 @@ export function cancelOrder(id: string) {
 
 /* -------------------------------- Addresses ------------------------------- */
 
-export const addressStore = createStore<Address[]>("addresses", demoAddresses);
+export const addressStore = createStore<Address[]>("addresses", [], {
+  migrate: (saved) => saved.filter((a) => !LEGACY_ADDRESS_IDS.has(a.id)),
+});
 export const useAddresses = addressStore.useStore;
 
 export function saveAddress(address: Omit<Address, "id"> & { id?: string }) {
@@ -312,5 +358,5 @@ export function dismissToast(id: string) {
 /* ---------------------------- Demo housekeeping --------------------------- */
 
 export function resetCustomerDemo() {
-  [cartStore, couponStore, favoritesStore, userStore, ordersStore, addressStore].forEach((s) => s.reset());
+  [cartStore, couponStore, favoritesStore, userStore, ordersStore, addressStore, accountsStore].forEach((s) => s.reset());
 }

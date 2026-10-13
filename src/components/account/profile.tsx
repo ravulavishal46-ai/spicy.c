@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/dialog";
 import { Field, Input } from "@/components/ui/field";
 import { SpiceMeter } from "@/components/shop/spice-meter";
-import { resetCustomerDemo, signOut, toast, useFavorites, useOrders, userStore, useUser } from "@/lib/store";
+import { orderStats, resetCustomerDemo, signOut, toast, useFavorites, useOrders, userStore, useUser } from "@/lib/store";
 import type { SpiceLevel } from "@/lib/types";
 import { formatDate, money } from "@/lib/utils";
 import { validators } from "@/lib/validation";
@@ -25,8 +25,7 @@ export function Profile() {
   const [saving, setSaving] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
 
-  const delivered = orders.filter((o) => o.status === "delivered");
-  const spent = delivered.reduce((s, o) => s + o.total, 0);
+  const stats = orderStats(orders);
   const dirty = name !== user.name || phone !== user.phone || heat !== user.heatPreference;
 
   async function save(e: React.FormEvent) {
@@ -47,9 +46,9 @@ export function Profile() {
 
       <dl className="grid grid-cols-3 gap-3">
         {[
-          ["Orders", String(delivered.length)],
+          ["Orders", String(stats.count)],
           ["Favorites", String(favorites.length)],
-          ["Spent", money(spent)],
+          ["Spent", money(stats.spent)],
         ].map(([label, value]) => (
           <div key={label} className="rounded-[1.25rem] bg-white p-5 shadow-[var(--shadow-soft)]">
             <dt className="text-sm text-ash">{label}</dt>

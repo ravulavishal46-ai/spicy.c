@@ -1,4 +1,4 @@
-import type { Address, Order, Review, User } from "../types";
+import type { Review, User } from "../types";
 
 /** Profile defaults for a simulated sign-in. The name always comes from the user. */
 export const defaultProfile: Omit<User, "name" | "email"> = {
@@ -9,109 +9,6 @@ export const defaultProfile: Omit<User, "name" | "email"> = {
 
 /** Email used by the "quick demo sign-in" button. */
 export const DEMO_EMAIL = "demo@spicy.test";
-
-export const demoAddresses: Address[] = [
-  {
-    id: "addr-home",
-    label: "Home",
-    line1: "Flat 12B, Saffron Residency",
-    line2: "Example Street, Demo Nagar",
-    city: "Hyderabad",
-    pincode: "500001",
-    phone: "+91 90000 00000",
-    isDefault: true,
-  },
-  {
-    id: "addr-work",
-    label: "Work",
-    line1: "Floor 4, Fictional Tech Park",
-    line2: "Sample Road, Test Layout",
-    city: "Hyderabad",
-    pincode: "500081",
-    phone: "+91 90000 00000",
-    isDefault: false,
-  },
-];
-
-function order(
-  id: string,
-  createdAt: string,
-  items: Order["items"],
-  status: Order["status"],
-  extra: Partial<Order> = {},
-): Order {
-  const subtotal = items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
-  const discount = extra.discount ?? 0;
-  const delivery = subtotal >= 599 ? 0 : 49;
-  const tax = Math.round((subtotal - discount) * 0.05);
-  return {
-    id,
-    createdAt,
-    customerName: "You",
-    items,
-    subtotal,
-    discount,
-    delivery,
-    tax,
-    total: subtotal - discount + delivery + tax,
-    status,
-    address: "Flat 12B, Saffron Residency, Hyderabad 500001",
-    payment: "upi",
-    couponCode: null,
-    live: false,
-    ...extra,
-  };
-}
-
-export const demoOrders: Order[] = [
-  order(
-    "SPC-48213",
-    "2026-10-10T19:42:00+05:30",
-    [
-      { dishId: "the-scorcher", name: "The Scorcher", qty: 1, unitPrice: 389, spice: 5, detail: "Extra cheese" },
-      { dishId: "masala-loaded-fries", name: "Masala Loaded Fries", qty: 1, unitPrice: 179, spice: 2, detail: "" },
-      { dishId: "mango-lassi", name: "Mango Lassi", qty: 2, unitPrice: 129, spice: 1, detail: "Glass" },
-    ],
-    "delivered",
-    { rated: 5 },
-  ),
-  order(
-    "SPC-47790",
-    "2026-10-04T13:15:00+05:30",
-    [
-      { dishId: "hyderabadi-dum-biryani", name: "Hyderabadi Dum Biryani", qty: 2, unitPrice: 399, spice: 3, detail: "Regular" },
-      { dishId: "chili-cheese-samosas", name: "Chili Cheese Samosas", qty: 1, unitPrice: 149, spice: 2, detail: "" },
-    ],
-    "delivered",
-    { discount: 150, couponCode: "HEAT20" },
-  ),
-  order(
-    "SPC-46902",
-    "2026-09-27T20:05:00+05:30",
-    [
-      { dishId: "ember-chicken-bowl", name: "Ember Chicken Bowl", qty: 1, unitPrice: 349, spice: 4, detail: "Regular · Jammy soft egg" },
-      { dishId: "chili-oil-dumplings", name: "Chili Oil Dumplings", qty: 1, unitPrice: 289, spice: 3, detail: "" },
-    ],
-    "delivered",
-    { payment: "card" },
-  ),
-  order(
-    "SPC-46118",
-    "2026-09-18T21:30:00+05:30",
-    [
-      { dishId: "the-scorcher", name: "The Scorcher", qty: 2, unitPrice: 389, spice: 5, detail: "" },
-      { dishId: "buffalo-blaze-wings", name: "Buffalo Blaze Wings", qty: 1, unitPrice: 329, spice: 3, detail: "6 pieces" },
-    ],
-    "delivered",
-  ),
-  order(
-    "SPC-45577",
-    "2026-09-09T12:50:00+05:30",
-    [{ dishId: "smoked-butter-chicken", name: "Smoked Butter Chicken", qty: 1, unitPrice: 379, spice: 2, detail: "Regular" }],
-    "cancelled",
-    { payment: "cod" },
-  ),
-];
 
 export const demoReviews: Review[] = [
   {

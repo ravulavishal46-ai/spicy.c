@@ -110,11 +110,12 @@ export function ForYou() {
   const { dishes: picks, topTag } = recommend(favorites, orders, user.heatPreference, 4);
   return (
     <section aria-labelledby="foryou-title" className="container-x py-16 sm:py-20">
-      <div className="rounded-[2rem] bg-cream-200/70 p-5 sm:p-8 lg:p-10">
-        <SmartReorder />
-      </div>
+      {frequentItems(orders, 1).length > 0 && (
+        <div className="mb-16 rounded-[2rem] bg-cream-200/70 p-5 sm:p-8 lg:p-10">
+          <SmartReorder />
+        </div>
+      )}
       <SectionHeading
-        className="mt-16"
         eyebrow={`For you, ${user.name.split(" ")[0]}`}
         title={
           <span id="foryou-title">
