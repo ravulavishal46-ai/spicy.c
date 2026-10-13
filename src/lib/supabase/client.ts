@@ -7,9 +7,9 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  * (it only allows what the database's security rules permit), so it is safe
  * to ship in the browser. Override both with .env.local if you move projects.
  */
-export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://hdzzjojyqjxssdnzpbca.supabase.co";
+export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://ysrxcvzocmlqytvwxoyj.supabase.co";
 export const SUPABASE_PUBLISHABLE_KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_8cfesvP-mrRd5EKKRh_oHg_vjgOAoeF";
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_vqqWBkmHTmYnKe2UVfK4Yw_E7R4IOLZ";
 
 let client: SupabaseClient | null = null;
 

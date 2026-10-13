@@ -67,11 +67,11 @@ All data is kept in your browser; clearing your browser's site data starts every
 
 Anyone can browse the menu. **Adding to the bag, reordering and checkout require
 signing in with an email one-time code**, handled by Supabase Auth
-(project `SPICY`, `hdzzjojyqjxssdnzpbca`). The demo sign-in is browse-only.
+(project `spicy`, `ysrxcvzocmlqytvwxoyj`). The demo sign-in is browse-only.
 
 **One-time setup in the Supabase dashboard** (so emails contain a code instead of a link):
 
-1. Open <https://supabase.com/dashboard/project/hdzzjojyqjxssdnzpbca/auth/templates>.
+1. Open <https://supabase.com/dashboard/project/ysrxcvzocmlqytvwxoyj/auth/templates>.
 2. Edit the **Magic Link** template and the **Confirm signup** template. Set the subject to
    `Your SPICY sign-in code` and the body to:
    ```html
