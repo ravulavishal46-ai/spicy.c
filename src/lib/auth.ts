@@ -19,6 +19,10 @@ function friendly(error: AuthError | Error | null | undefined, step: "send" | "v
   const message = (error?.message ?? "").toLowerCase();
   const status = (error as AuthError | undefined)?.status;
   if (error instanceof TypeError || message.includes("failed to fetch") || message.includes("network")) {
+    // The single-file preview inside Claude can't contact outside services at all.
+    if (process.env.NEXT_PUBLIC_SPICY_PREVIEW === "1") {
+      return "Email sign-in doesn't work inside the Claude preview, which blocks outside connections. Open the website itself (npm run dev, or its online address) to sign in. You can still browse as demo here.";
+    }
     return "Couldn't reach the sign-in service. Check your internet connection and try again.";
   }
   if (step === "verify" && (message.includes("expired") || message.includes("invalid") || status === 403)) {

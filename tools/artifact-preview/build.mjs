@@ -45,6 +45,7 @@ const result = await build({
     "process.env.NODE_ENV": '"production"',
     "process.env.NEXT_PUBLIC_SUPABASE_URL": '""',
     "process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": '""',
+    "process.env.NEXT_PUBLIC_SPICY_PREVIEW": '"1"',
   },
   logOverride: { "unsupported-directive": "silent" },
   legalComments: "none",
