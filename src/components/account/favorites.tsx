@@ -5,7 +5,7 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
 import { FoodCard } from "@/components/shop/food-card";
 import { getDish } from "@/lib/data/menu";
-import { addDishToCart, toast, useFavorites } from "@/lib/store";
+import { addDishToCart, canOrder, requestEmailSignIn, toast, useFavorites } from "@/lib/store";
 import { pluralize } from "@/lib/utils";
 import { AccountHeading } from "./account-shell";
 
@@ -19,6 +19,7 @@ export function Favorites() {
           <Button
             variant="dark"
             onClick={() => {
+              if (!canOrder()) return requestEmailSignIn("add your favorites to the bag");
               dishes.forEach((d) => addDishToCart({ dishId: d.id, silent: true }));
               toast({ title: `Added ${dishes.length} favorites to your bag`, tone: "success" });
             }}

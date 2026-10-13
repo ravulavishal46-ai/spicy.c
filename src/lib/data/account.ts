@@ -7,9 +7,6 @@ export const defaultProfile: Omit<User, "name" | "email"> = {
   heatPreference: 3,
 };
 
-/** Email used by the "quick demo sign-in" button. */
-export const DEMO_EMAIL = "demo@spicy.test";
-
 export const demoReviews: Review[] = [
   {
     id: "rv-1",

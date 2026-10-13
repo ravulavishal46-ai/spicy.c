@@ -154,4 +154,6 @@ export interface User {
   phone: string;
   memberSince: string;
   heatPreference: SpiceLevel;
+  /** True only after the user proved they own the email with a one-time code. */
+  verified?: boolean;
 }

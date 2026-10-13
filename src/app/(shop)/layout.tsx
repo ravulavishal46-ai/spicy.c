@@ -1,6 +1,7 @@
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { CartDrawer } from "@/components/shop/cart-drawer";
+import { SignInPrompt } from "@/components/auth/sign-in-prompt";
 
 export default function ShopLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,7 @@ export default function ShopLayout({ children }: { children: React.ReactNode }) 
       </main>
       <Footer />
       <CartDrawer />
+      <SignInPrompt />
     </>
   );
 }

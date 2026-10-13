@@ -35,7 +35,7 @@ export function DishCustomizer({ dish }: { dish: Dish }) {
       setNoteError("Please avoid < and > characters in notes.");
       return;
     }
-    addDishToCart({ dishId: dish.id, qty, spice, addOnIds, sizeId, note: note.trim() });
+    if (!addDishToCart({ dishId: dish.id, qty, spice, addOnIds, sizeId, note: note.trim() })) return;
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1800);
   }

@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { LogOut, MailCheck, ShieldCheck } from "lucide-react";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { SpiceMeter } from "@/components/shop/spice-meter";
-import { orderStats, signOut, toast, useFavorites, useOrders, userStore, useUser } from "@/lib/store";
+import { signOut } from "@/lib/auth";
+import { orderStats, toast, useFavorites, useOrders, userStore, useUser } from "@/lib/store";
 import type { SpiceLevel } from "@/lib/types";
 import { formatDate, money } from "@/lib/utils";
 import { validators } from "@/lib/validation";
@@ -42,6 +43,21 @@ export function Profile() {
     <>
       <AccountHeading eyebrow={`Member since ${formatDate(user.memberSince)}`} title={`Hey, ${user.name.split(" ")[0]}.`} />
 
+      {user.verified ? (
+        <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-leaf-soft px-4 py-2 text-sm font-semibold text-leaf">
+          <ShieldCheck className="h-4 w-4" aria-hidden /> Email verified · you can order
+        </p>
+      ) : (
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-[1.25rem] border-[1.5px] border-dashed border-saffron bg-saffron-soft/60 px-5 py-4">
+          <p className="text-sm">
+            <span className="font-semibold">Demo account — browsing only.</span> Sign in with your email to add to the bag and order.
+          </p>
+          <ButtonLink href="/login?next=/account" size="sm">
+            <MailCheck className="h-4 w-4" aria-hidden /> Verify email
+          </ButtonLink>
+        </div>
+      )}
+
       <dl className="grid grid-cols-3 gap-3">
         {[
           ["Orders", String(stats.count)],
@@ -61,7 +77,7 @@ export function Profile() {
           <Field label="Full name" error={errors.name}>
             {(p) => <Input {...p} value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />}
           </Field>
-          <Field label="Email" hint="Email changes need verification in the real product.">
+          <Field label="Email" hint={user.verified ? "Verified with a one-time code." : "Demo account — not a real email."}>
             {(p) => <Input {...p} value={user.email} disabled />}
           </Field>
           <Field label="Mobile" error={errors.phone}>

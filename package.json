@@ -12,6 +12,7 @@
     "preview:single": "node tools/artifact-preview/build.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
     "clsx": "^2.1.1",
     "lucide-react": "^1.56.0",
     "next": "^16.4.0",

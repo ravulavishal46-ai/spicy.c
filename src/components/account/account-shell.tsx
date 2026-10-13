@@ -5,7 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { Heart, LogOut, MapPin, Receipt, UserRound } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/misc";
-import { signOut, useUser } from "@/lib/store";
+import { signOut } from "@/lib/auth";
+import { useUser } from "@/lib/store";
 import { useHydrated } from "@/lib/store/create-store";
 import { cn } from "@/lib/utils";
 

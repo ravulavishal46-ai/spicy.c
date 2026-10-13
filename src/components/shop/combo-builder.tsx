@@ -207,8 +207,7 @@ export function ComboBuilder() {
               className="mt-5 w-full"
               disabled={!complete}
               onClick={() => {
-                addComboToCart(chosen);
-                reset();
+                if (addComboToCart(chosen)) reset();
               }}
             >
               <Sparkles className="h-5 w-5" aria-hidden />

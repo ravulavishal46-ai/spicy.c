@@ -6,6 +6,7 @@ import { Component, StrictMode, Suspense, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, useRouterContext } from "./shims/router";
 import { Toaster } from "@/components/ui/toaster";
+import { AuthSync } from "@/components/auth/auth-sync";
 
 import ShopLayout from "@/app/(shop)/layout";
 import HomePage from "@/app/(shop)/page";
@@ -138,6 +139,7 @@ createRoot(document.getElementById("spicy-root")!).render(
     <RouterProvider>
       <App />
       <Toaster />
+      <AuthSync />
     </RouterProvider>
   </StrictMode>,
 );

@@ -31,7 +31,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
         </div>
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">{children}</div>
-        <p className="text-center text-xs text-ash">Prototype only — accounts are simulated and stored in this browser.</p>
+        <p className="text-center text-xs text-ash">Sign-in codes are sent by Supabase. Orders and payments in this prototype are still simulated.</p>
       </main>
     </div>
   );

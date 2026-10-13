@@ -8,7 +8,8 @@ import { Logo } from "@/components/ui/brand";
 import { BackButton } from "./back-button";
 import { Drawer } from "@/components/ui/dialog";
 import { categories } from "@/lib/data/menu";
-import { openCart, signOut, useCartTotals, useUser } from "@/lib/store";
+import { signOut } from "@/lib/auth";
+import { openCart, useCartTotals, useUser } from "@/lib/store";
 import { useHydrated } from "@/lib/store/create-store";
 import { cn, pluralize } from "@/lib/utils";
 

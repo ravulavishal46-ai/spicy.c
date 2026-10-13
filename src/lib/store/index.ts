@@ -30,6 +30,36 @@ export function closeCart() {
   cartDrawerStore.set(false);
 }
 
+/* ------------------------------ Ordering gate ----------------------------- */
+
+/** Only users who verified their email with a one-time code can order. */
+export function canOrder() {
+  return Boolean(userStore.get()?.verified);
+}
+
+export function useCanOrder() {
+  return Boolean(useUser()?.verified);
+}
+
+/** Shown when someone who isn't verified tries to add to the bag or order. */
+export const signInPromptStore = createStore<{ open: boolean; reason: string }>(
+  "sign-in-prompt",
+  { open: false, reason: "" },
+  { persist: false },
+);
+
+export function requestEmailSignIn(reason = "add dishes to your bag") {
+  closeCart();
+  signInPromptStore.set({ open: true, reason });
+}
+
+/** Returns false (and asks the user to verify their email) when ordering isn't allowed. */
+function ensureCanOrder(reason?: string) {
+  if (canOrder()) return true;
+  requestEmailSignIn(reason);
+  return false;
+}
+
 export function addDishToCart(opts: {
   dishId: string;
   qty?: number;
@@ -38,9 +68,10 @@ export function addDishToCart(opts: {
   sizeId?: string | null;
   note?: string;
   silent?: boolean;
-}) {
+}): boolean {
+  if (!ensureCanOrder()) return false;
   const dish = getDish(opts.dishId);
-  if (!dish) return;
+  if (!dish) return false;
   const spice = opts.spice ?? dish.spice;
   const addOnIds = opts.addOnIds ?? [];
   const sizeId = opts.sizeId ?? dish.sizes[0]?.id ?? null;
@@ -53,9 +84,11 @@ export function addDishToCart(opts: {
     return [...lines, { key, kind: "dish", dishId: dish.id, qty, spice, addOnIds, sizeId, note }];
   });
   if (!opts.silent) toast({ title: `${dish.name} added`, action: { label: "View cart", onClick: openCart } });
+  return true;
 }
 
-export function addComboToCart(picks: { dishId: string; spice: SpiceLevel }[]) {
+export function addComboToCart(picks: { dishId: string; spice: SpiceLevel }[]): boolean {
+  if (!ensureCanOrder("add a combo to your bag")) return false;
   const key = "combo|" + picks.map((p) => `${p.dishId}:${p.spice}`).join("+");
   cartStore.set((lines) => {
     const existing = lines.find((l) => l.key === key);
@@ -63,6 +96,7 @@ export function addComboToCart(picks: { dishId: string; spice: SpiceLevel }[]) {
     return [...lines, { key, kind: "combo", qty: 1, picks, discountPct: COMBO_DISCOUNT }];
   });
   toast({ title: "Combo added to cart", action: { label: "View cart", onClick: openCart } });
+  return true;
 }
 
 export function setLineQty(key: string, qty: number) {
@@ -131,6 +165,9 @@ export const userStore = createStore<User | null>("user", null, {
 });
 export const useUser = userStore.useStore;
 
+/** Email used by the browse-only demo sign-in. */
+export const DEMO_EMAIL = "demo@spicy.test";
+
 /* Each account (and the signed-out guest) keeps its own orders, favorites and
    addresses, so a brand-new user always starts at zero. */
 
@@ -160,7 +197,11 @@ function switchAccount(from: string, to: string) {
   addressStore.set(data?.addresses ?? []);
 }
 
-/** Simulated sign-in. Nothing leaves the browser. The name is always the one the user typed. */
+/**
+ * Puts a user on screen and loads that account's orders, favorites and addresses.
+ * Email accounts arrive here only after Supabase verified their one-time code
+ * (see lib/auth.ts); the demo sign-in is browse-only (verified: false).
+ */
 export function signIn(user: Partial<User> & { name: string; email: string }) {
   const current = userStore.get();
   const key = accountKey(user);
@@ -172,13 +213,15 @@ export function signIn(user: Partial<User> & { name: string; email: string }) {
     ...(saved ?? {}),
     ...user,
     name: user.name.trim(),
+    verified: Boolean(user.verified),
   });
 }
 
-export function signOut() {
+/** Clears the on-screen user without touching Supabase (see lib/auth.ts for full sign-out). */
+export function signOutLocal() {
   switchAccount(accountKey(userStore.get()), GUEST);
   userStore.set(null);
-  toast({ title: "Signed out" });
+  clearCart();
 }
 
 /* --------------------------------- Orders --------------------------------- */
@@ -198,7 +241,8 @@ export function placeOrder(input: {
   customerName: string;
   address: string;
   payment: PaymentMethod;
-}): Order {
+}): Order | null {
+  if (!ensureCanOrder("place an order")) return null;
   const lines = cartStore.get();
   const code = couponStore.get();
   const totals = computeTotals(lines, coupons.find((c) => c.code === code));
@@ -258,6 +302,7 @@ export function rateOrder(id: string, rating: number) {
 
 /** Re-adds every item from a past order to the cart. */
 export function reorder(order: Order) {
+  if (!ensureCanOrder("reorder")) return;
   let added = 0;
   for (const item of order.items) {
     if (!getDish(item.dishId) || item.name.startsWith("Build-Your-Combo")) continue;

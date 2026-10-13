@@ -53,13 +53,44 @@ Useful extras:
 | Cart drawer | Change quantities, apply `HEAT20`, try a bad code |
 | `/checkout` | Submit empty to see validation; card `4242 4242 4242 4242` succeeds, `4000 0000 0000 0002` is declined |
 | After checkout | Watch the order move through each stage (≈1 minute); “Replay tracking demo” restarts it |
-| `/login` | Enter your name, then “Quick demo sign-in” — your name appears on your profile; unlocks Smart Reorder and personalised picks |
+| `/login` | **Sign in with email:** enter your name and email, then the 6-digit code from your inbox — unlocks the bag and ordering. **Browse as demo:** name only, can view everything but can't order |
 | `/menu?simulate=error` | See the error state |
 | `/admin` | Advance orders, edit dishes, restock inventory, moderate reviews — all logged in **Settings → Audit activity** |
 
 Each signed-in account (by email) keeps its own orders, favorites and addresses — a new user starts at zero, and the profile’s Orders, Favorites and Spent figures are calculated from that account’s own orders (cancelled orders excluded).
 
 All data is kept in your browser; clearing your browser's site data starts everything fresh.
+
+---
+
+## Email sign-in (Supabase)
+
+Anyone can browse the menu. **Adding to the bag, reordering and checkout require
+signing in with an email one-time code**, handled by Supabase Auth
+(project `SPICY`, `hdzzjojyqjxssdnzpbca`). The demo sign-in is browse-only.
+
+**One-time setup in the Supabase dashboard** (so emails contain a code instead of a link):
+
+1. Open <https://supabase.com/dashboard/project/hdzzjojyqjxssdnzpbca/auth/templates>.
+2. Edit the **Magic Link** template and the **Confirm signup** template. Set the subject to
+   `Your SPICY sign-in code` and the body to:
+   ```html
+   <h2>Your SPICY sign-in code</h2>
+   <p>Enter this code to sign in: <strong style="font-size:24px;letter-spacing:4px">{{ .Token }}</strong></p>
+   <p>It expires in one hour. If you didn't ask for it, you can ignore this email.</p>
+   ```
+3. Save both.
+
+**Sending to real customers:** Supabase's built-in email only delivers to members of your
+Supabase team and only a few emails per hour. For real users, add an email service
+(for example [Resend](https://resend.com), free tier) under
+**Authentication → Emails → SMTP Settings** in the Supabase dashboard.
+
+The connection details live in `src/lib/supabase/client.ts` (the publishable key is safe to
+ship in the browser). To use another project, copy `.env.example` to `.env.local` and change them.
+
+> Ordering is checked in the browser for now. When orders move into the Supabase database,
+> database security rules will enforce the same "verified email only" rule on the server.
 
 ---
 

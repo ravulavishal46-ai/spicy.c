@@ -41,7 +41,11 @@ const result = await build({
     "next/navigation": path.join(here, "shims/next-navigation.ts"),
     "next/image": path.join(here, "shims/next-image.tsx"),
   },
-  define: { "process.env.NODE_ENV": '"production"' },
+  define: {
+    "process.env.NODE_ENV": '"production"',
+    "process.env.NEXT_PUBLIC_SUPABASE_URL": '""',
+    "process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": '""',
+  },
   logOverride: { "unsupported-directive": "silent" },
   legalComments: "none",
 });

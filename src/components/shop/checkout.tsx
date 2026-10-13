@@ -1,15 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { Banknote, CreditCard, Lock, MapPin, ShoppingBag, Smartphone, Zap, CalendarClock } from "lucide-react";
+import { Banknote, CreditCard, Lock, MailCheck, MapPin, ShoppingBag, Smartphone, Zap, CalendarClock } from "lucide-react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { EmptyState, Skeleton } from "@/components/ui/misc";
 import { FoodImage } from "@/components/ui/food-image";
 import { lineUnitPrice } from "@/lib/pricing";
-import { placeOrder, saveAddress, useAddresses, useCart, useCartTotals, useUser } from "@/lib/store";
+import { placeOrder, saveAddress, useAddresses, useCanOrder, useCart, useCartTotals, useUser } from "@/lib/store";
 import { useHydrated } from "@/lib/store/create-store";
 import type { PaymentMethod } from "@/lib/types";
 import { cn, money } from "@/lib/utils";
@@ -21,6 +20,8 @@ const DECLINE_CARD = "4000000000000002";
 export function Checkout() {
   const hydrated = useHydrated();
   const lines = useCart();
+  const canOrder = useCanOrder();
+  const user = useUser();
   if (!hydrated) {
     return (
       <div className="container-x grid gap-10 py-10 lg:grid-cols-[1fr_400px]" role="status" aria-label="Loading checkout">
@@ -30,6 +31,20 @@ export function Checkout() {
         </div>
         <Skeleton className="h-96" />
       </div>
+    );
+  }
+  if (!canOrder) {
+    return (
+      <EmptyState
+        icon={<MailCheck className="h-9 w-9" />}
+        title="Verify your email to order"
+        body={
+          user
+            ? `You're browsing as a demo user (${user.name}). To place orders, sign in with your email and the one-time code we send you.`
+            : "Sign in with your email and the one-time code we send you, then come back here to place your order."
+        }
+        action={<ButtonLink href="/login?next=/checkout">Sign in with email</ButtonLink>}
+      />
     );
   }
   if (!lines.length) {
@@ -163,6 +178,10 @@ function CheckoutForm() {
       address = `${a.line1}, ${a.city} ${a.pincode}`;
     }
     const order = placeOrder({ customerName: form.name.trim(), address, payment });
+    if (!order) {
+      setSubmitting(false);
+      return;
+    }
     router.push(`/account/orders/${order.id}?placed=1`);
   }
 
@@ -176,15 +195,6 @@ function CheckoutForm() {
   return (
     <form ref={formRef} onSubmit={submit} noValidate className="container-x grid gap-10 pb-10 lg:grid-cols-[1fr_400px] lg:gap-14">
       <div className="space-y-6">
-        {!user && (
-          <p className="rounded-2xl bg-saffron-soft px-5 py-4 text-sm">
-            Checking out as a guest.{" "}
-            <Link href="/login?next=/checkout" className="font-semibold underline underline-offset-2">
-              Sign in
-            </Link>{" "}
-            to use saved addresses and earn reorder suggestions.
-          </p>
-        )}
 
         <Section n={1} title="Contact" icon={null}>
           <div className="grid gap-4 sm:grid-cols-2">

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { AuthSync } from "@/components/auth/auth-sync";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-dvh">
         {children}
         <Toaster />
+        <AuthSync />
       </body>
     </html>
   );
