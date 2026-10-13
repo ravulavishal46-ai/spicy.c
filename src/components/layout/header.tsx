@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Heart, Menu as MenuIcon, Search, ShoppingBag, User } from "lucide-react";
 import { Logo } from "@/components/ui/brand";
+import { BackButton } from "./back-button";
 import { Drawer } from "@/components/ui/dialog";
 import { categories } from "@/lib/data/menu";
 import { openCart, signOut, useCartTotals, useUser } from "@/lib/store";
@@ -46,15 +47,18 @@ export function Header() {
         </p>
       </div>
       <header className="sticky top-0 z-40 border-b border-charcoal/[0.07] bg-cream/88 backdrop-blur-md">
-        <div className="container-x flex h-[4.25rem] items-center gap-4 lg:gap-8">
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            className="-ml-2 grid h-11 w-11 cursor-pointer place-items-center rounded-full hover:bg-charcoal/5 lg:hidden"
-            aria-label="Open navigation menu"
-          >
-            <MenuIcon className="h-5 w-5" />
-          </button>
+        <div className="container-x flex h-[4.25rem] items-center gap-1.5 sm:gap-4 lg:gap-8">
+          <div className="-ml-2 flex items-center">
+            <BackButton />
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="grid h-11 w-11 cursor-pointer place-items-center rounded-full hover:bg-charcoal/5 lg:hidden"
+              aria-label="Open navigation menu"
+            >
+              <MenuIcon className="h-5 w-5" />
+            </button>
+          </div>
           <Logo />
           <nav aria-label="Main" className="hidden lg:block">
             <ul className="flex items-center gap-1">

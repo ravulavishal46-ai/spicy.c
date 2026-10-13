@@ -1,3 +1,4 @@
+import { BackButton } from "@/components/layout/back-button";
 import { Logo } from "@/components/ui/brand";
 import { FoodImage } from "@/components/ui/food-image";
 import { photos } from "@/lib/data/images";
@@ -23,8 +24,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
       </aside>
       <main id="main" className="grain flex flex-col px-5 py-8 sm:px-10">
-        <div className="lg:hidden">
-          <Logo />
+        <div className="-ml-2 flex items-center gap-1">
+          <BackButton hideOn={[]} />
+          <div className="lg:hidden">
+            <Logo />
+          </div>
         </div>
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">{children}</div>
         <p className="text-center text-xs text-ash">Prototype only — accounts are simulated and stored in this browser.</p>

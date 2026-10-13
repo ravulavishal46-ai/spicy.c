@@ -18,6 +18,7 @@ import {
   Users,
   UtensilsCrossed,
 } from "lucide-react";
+import { BackButton } from "@/components/layout/back-button";
 import { ChiliIcon } from "@/components/ui/brand";
 import { Drawer } from "@/components/ui/dialog";
 import { adminInventory, adminOrders, adminReviews, stockLevel } from "@/lib/admin/store";
@@ -147,6 +148,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
         <div className="min-w-0">
           <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-charcoal/[0.08] bg-[#f6f3ef]/90 px-4 backdrop-blur lg:hidden">
+            <BackButton fallback="/admin" hideOn={["/admin"]} className="-mr-2" />
             <button
               type="button"
               onClick={() => setOpen(true)}
@@ -159,6 +161,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <span className="ml-auto rounded-full bg-saffron px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider">Unsecured prototype</span>
           </header>
           <main id="main" className="px-4 pb-16 pt-6 sm:px-6 lg:px-10 lg:pt-8">
+            <div className="-ml-2 mb-2 hidden lg:block">
+              <BackButton fallback="/admin" hideOn={["/admin"]} />
+            </div>
             {children}
           </main>
         </div>
