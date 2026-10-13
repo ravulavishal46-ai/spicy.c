@@ -37,7 +37,7 @@ export function SmartReorder({ heading = true }: { heading?: boolean }) {
       )}
       <ul className="grid gap-3 md:grid-cols-3">
         {items.map(({ dish, times, spice, lastOrdered }) => (
-          <li key={dish.id} className="flex items-center gap-4 rounded-[1.25rem] bg-white p-3 pr-4 shadow-[var(--shadow-soft)]">
+          <li key={dish.id} className="flex min-w-0 items-center gap-4 rounded-[1.25rem] bg-white p-3 pr-4 shadow-[var(--shadow-soft)]">
             <Link href={`/food/${dish.slug}`} className="shrink-0 overflow-hidden rounded-2xl">
               <FoodImage src={dish.image} alt="" label={dish.name} className="h-20 w-20" sizes="80px" />
             </Link>

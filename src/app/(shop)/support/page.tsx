@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui/misc";
-import { contactChannels, ContactForm, FaqList, ReviewsSection } from "@/components/shop/support";
+import { Clock, Mail, MessageCircle, Phone } from "lucide-react";
+import { ContactForm, FaqList, ReviewsSection } from "@/components/shop/support";
 
 export const metadata: Metadata = { title: "Reviews & support" };
+
+const contactChannels = [
+  { icon: MessageCircle, title: "Live chat", body: "Avg. reply in 2 min", note: "Simulated" },
+  { icon: Phone, title: "Call us", body: "+91 00000 00000", note: "Fictional number" },
+  { icon: Mail, title: "Email", body: "help@spicy.test", note: "Not monitored" },
+  { icon: Clock, title: "Hours", body: "11 AM – 2 AM daily", note: "Demo hours" },
+];
 
 export default function SupportPage() {
   return (

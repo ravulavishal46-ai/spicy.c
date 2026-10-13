@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { CheckCircle2, ChevronDown, Clock, Mail, MessageCircle, Phone, Star } from "lucide-react";
+import { CheckCircle2, ChevronDown, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { Badge, Stars } from "@/components/ui/misc";
@@ -331,10 +331,3 @@ export function ContactForm() {
     </form>
   );
 }
-
-export const contactChannels = [
-  { icon: MessageCircle, title: "Live chat", body: "Avg. reply in 2 min", note: "Simulated" },
-  { icon: Phone, title: "Call us", body: "+91 00000 00000", note: "Fictional number" },
-  { icon: Mail, title: "Email", body: "help@spicy.test", note: "Not monitored" },
-  { icon: Clock, title: "Hours", body: "11 AM – 2 AM daily", note: "Demo hours" },
-];
