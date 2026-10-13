@@ -69,7 +69,13 @@ Anyone can browse the menu. **Adding to the bag, reordering and checkout require
 signing in with an email one-time code**, handled by Supabase Auth
 (project `spicy`, `ysrxcvzocmlqytvwxoyj`). The demo sign-in is browse-only.
 
-**One-time setup in the Supabase dashboard** (so emails contain a code instead of a link):
+Without any setup, Supabase's default email contains a **sign-in link**; clicking it signs the
+customer in too (it opens `/account`). Add your site addresses (for example
+`http://localhost:3000` and your Vercel address) under **Authentication → URL Configuration**
+(Site URL and Redirect URLs) so the link lands on the right site.
+
+**To email a 6-digit code instead** (newer projects only allow editing templates once custom
+SMTP is on — see "Sending to real customers" below first):
 
 1. Open <https://supabase.com/dashboard/project/ysrxcvzocmlqytvwxoyj/auth/templates>.
 2. Edit the **Magic Link** template and the **Confirm signup** template. Set the subject to
@@ -83,8 +89,20 @@ signing in with an email one-time code**, handled by Supabase Auth
 
 **Sending to real customers:** Supabase's built-in email only delivers to members of your
 Supabase team and only a few emails per hour. For real users, add an email service
-(for example [Resend](https://resend.com), free tier) under
-**Authentication → Emails → SMTP Settings** in the Supabase dashboard.
+under **Authentication → Emails → SMTP Settings** in the Supabase dashboard. The simplest free
+option without a domain is Gmail:
+
+| Field | Value |
+| --- | --- |
+| Sender email address | your Gmail address |
+| Sender name | `SPICY` |
+| Host | `smtp.gmail.com` |
+| Port number | `465` |
+| Username | your Gmail address |
+| Password | a 16-letter Google **App Password** (Google Account → Security → 2-Step Verification on → App passwords), not your normal password |
+
+Gmail sends up to about 500 emails a day. For a real business, use a service such as
+[Resend](https://resend.com) with your own domain.
 
 The connection details live in `src/lib/supabase/client.ts` (the publishable key is safe to
 ship in the browser). To use another project, copy `.env.example` to `.env.local` and change them.

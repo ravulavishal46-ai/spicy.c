@@ -16,7 +16,7 @@ let client: SupabaseClient | null = null;
 export function supabase() {
   if (!client) {
     client = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: "spicy-auth" },
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: "spicy-auth" },
     });
   }
   return client;

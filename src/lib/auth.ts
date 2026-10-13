@@ -10,7 +10,9 @@ import type { SpiceLevel } from "./types";
  * Real email sign-in with a one-time code, powered by Supabase Auth.
  * 1. sendEmailCode() asks Supabase to email a 6-digit code.
  * 2. verifyEmailCode() checks it; only a correct code creates a session.
- * The email templates in Supabase must include {{ .Token }} (see README).
+ * Supabase's default email has a sign-in link instead of a code; clicking it
+ * also works (the session arrives in the URL and startAuthSync picks it up).
+ * To email a code, the templates must include {{ .Token }} (see README).
  */
 
 export type AuthResult = { ok: true } | { ok: false; error: string };
@@ -44,7 +46,12 @@ export async function sendEmailCode(email: string, name: string): Promise<AuthRe
   try {
     const { error } = await supabase().auth.signInWithOtp({
       email: email.trim(),
-      options: { shouldCreateUser: true, data: { name: name.trim() } },
+      options: {
+        shouldCreateUser: true,
+        data: { name: name.trim() },
+        // Where the link in the email lands (must be listed under Auth → URL Configuration).
+        emailRedirectTo: typeof window === "undefined" ? undefined : `${window.location.origin}/account`,
+      },
     });
     return error ? { ok: false, error: friendly(error, "send") } : { ok: true };
   } catch (e) {
@@ -106,7 +113,10 @@ export function startAuthSync() {
       const email = session.user.email;
       if (!current || current.email.toLowerCase() !== email.toLowerCase() || !current.verified) {
         const metaName = (session.user.user_metadata?.name as string | undefined)?.trim();
-        signIn({ name: current?.email.toLowerCase() === email.toLowerCase() ? current.name : metaName || email.split("@")[0], email, verified: true });
+        const name = current?.email.toLowerCase() === email.toLowerCase() ? current.name : metaName || email.split("@")[0];
+        signIn({ name, email, verified: true });
+        // Signed in by clicking the email link: record the registration too.
+        void saveProfile({ name, email });
       }
       void syncOrdersFromDb();
     } else if (current?.verified) {

@@ -66,7 +66,7 @@ export function EmailCodeForm({ mode }: { mode: "login" | "register" }) {
     setStep("code");
     setCode("");
     setCooldown(RESEND_SECONDS);
-    toast({ title: "Code sent", description: `Check ${email.trim()} for your sign-in code.`, tone: "success" });
+    toast({ title: "Code sent", description: `Check ${email.trim()} for your sign-in link or code.`, tone: "success" });
   }
 
   async function verify(e: React.FormEvent) {
@@ -122,8 +122,8 @@ export function EmailCodeForm({ mode }: { mode: "login" | "register" }) {
         </div>
         <h1 className="mt-4 text-5xl font-medium">Check your email</h1>
         <p className="mt-2 text-ash">
-          We sent a sign-in code to <strong className="text-charcoal">{email.trim()}</strong>. Enter it below. It expires in about an
-          hour.
+          We sent a sign-in email to <strong className="text-charcoal">{email.trim()}</strong>. Click the sign-in link in it, or
+          type the code below if it has one. It expires in about an hour.
         </p>
 
         <form onSubmit={verify} noValidate className="mt-8 space-y-5">
