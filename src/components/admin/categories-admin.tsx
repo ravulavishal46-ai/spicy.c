@@ -7,7 +7,7 @@ import { Modal } from "@/components/ui/dialog";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { FoodImage } from "@/components/ui/food-image";
 import { adminCategories, adminDishes, done } from "@/lib/admin/store";
-import { unsplash } from "@/lib/data/images";
+import { photos } from "@/lib/data/images";
 import { useHydrated } from "@/lib/store/create-store";
 import type { Category, ComboRole } from "@/lib/types";
 import { AdminPageHeader } from "./admin-shell";
@@ -134,7 +134,7 @@ function CategoryForm({ category, onClose }: { category: Category | null; onClos
     } else {
       adminCategories.set((list) => [
         ...list,
-        { slug, name: name.trim(), tagline: tagline.trim(), description: tagline.trim(), image: unsplash("1504674900247-0877df9cc836"), comboRole },
+        { slug, name: name.trim(), tagline: tagline.trim(), description: tagline.trim(), image: photos.spices, comboRole },
       ]);
       done("categories", "Created category", name.trim());
     }

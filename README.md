@@ -36,10 +36,9 @@ Useful extras:
 | `npm run lint` | ESLint |
 | `npm run check` | Typecheck + lint + build in one go |
 
-> Food photos load from Unsplash, so you need an internet connection to see them.
-> If a photo can't load, a designed placeholder appears instead.
-> To use your own photos, edit **`src/lib/data/images.ts`** and the `photo` ids in
-> **`src/lib/data/menu.ts`**.
+> Food photos are saved in `public/images` (sources in `public/images/CREDITS.md`), so they work offline.
+> To use your own photos, replace a file there and keep the same name.
+> If a photo is ever missing, a designed placeholder appears instead.
 
 ---
 

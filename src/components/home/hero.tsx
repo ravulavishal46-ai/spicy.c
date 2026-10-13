@@ -67,7 +67,7 @@ export function Hero() {
           <div className="absolute -bottom-6 -left-6 h-20 w-20 rounded-full border-[8px] border-chili sm:h-24 sm:w-24" aria-hidden />
           <div className="relative animate-[rise_1s_var(--ease-out-expo)_both] overflow-hidden rounded-[2rem] rounded-tr-[5rem] shadow-[var(--shadow-lift)]">
             <FoodImage
-              src={feature.image.replace("w=1200", "w=1400")}
+              src={feature.image}
               alt={`${feature.name}: ${feature.short}`}
               priority
               className="aspect-[4/4.6] w-full"

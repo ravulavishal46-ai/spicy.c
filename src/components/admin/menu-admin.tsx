@@ -9,7 +9,7 @@ import { FoodImage } from "@/components/ui/food-image";
 import { SpiceMeter, SpiceDots } from "@/components/shop/spice-meter";
 import type { AdminDish } from "@/lib/admin/data";
 import { adminCategories, adminDishes, done } from "@/lib/admin/store";
-import { unsplash } from "@/lib/data/images";
+import { photos } from "@/lib/data/images";
 import type { Badge as BadgeT, SpiceLevel } from "@/lib/types";
 import { money } from "@/lib/utils";
 import { AdminPageHeader } from "./admin-shell";
@@ -209,7 +209,7 @@ function DishForm({ dish, onClose }: { dish: AdminDish | null; onClose: () => vo
         short: d.short.trim(),
         story: d.short.trim(),
         price: Math.round(price),
-        image: unsplash("1504674900247-0877df9cc836"),
+        image: photos.spices,
         rating: 0,
         reviewCount: 0,
         spice: d.spice,

@@ -2,9 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Food photography is served from Unsplash. Every image falls back to a
-    // designed placeholder if it cannot load (offline, blocked network, etc.).
-    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
+    // Food photos are stored in public/images. If one can't load, a designed placeholder shows instead.
     qualities: [70, 80],
   },
 };

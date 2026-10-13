@@ -1,5 +1,4 @@
 import type { AddOn, Category, Dish, SizeOption } from "../types";
-import { unsplash } from "./images";
 
 /* ------------------------------------------------------------------ */
 /* All dishes, names and stories below are fictional demo content.    */
@@ -11,7 +10,7 @@ export const categories: Category[] = [
     name: "Fire Bowls",
     tagline: "Grains, greens, and a slow-building burn.",
     description: "Hearty bowls layered with charred proteins, pickles and our house chili crisp.",
-    image: unsplash("1546069901-ba9599a7e63c"),
+    image: "/images/categories/fire-bowls.jpg",
     comboRole: "main",
   },
   {
@@ -19,7 +18,7 @@ export const categories: Category[] = [
     name: "Smash Burgers",
     tagline: "Crisp-edged patties, molten cheese, loud sauces.",
     description: "Double-smashed on a screaming-hot flat-top, finished with fermented chili mayo.",
-    image: unsplash("1568901346375-23c9450c58cd"),
+    image: "/images/categories/smash-burgers.jpg",
     comboRole: "main",
   },
   {
@@ -27,7 +26,7 @@ export const categories: Category[] = [
     name: "Street Tacos",
     tagline: "Hand-pressed tortillas with salsa that bites back.",
     description: "Three tacos per plate on fresh corn tortillas, with salsas made every morning.",
-    image: unsplash("1551504734-5ee1c4a1479b"),
+    image: "/images/categories/street-tacos.jpg",
     comboRole: "main",
   },
   {
@@ -35,7 +34,7 @@ export const categories: Category[] = [
     name: "Wings & Grill",
     tagline: "Lacquered, blistered, finger-licking.",
     description: "Brined for 24 hours, smoked over charcoal and tossed in sauces from tame to unhinged.",
-    image: unsplash("1527477396000-e27163b481c2"),
+    image: "/images/categories/wings-grill.jpg",
     comboRole: "main",
   },
   {
@@ -43,7 +42,7 @@ export const categories: Category[] = [
     name: "Wok Noodles",
     tagline: "Breath-of-the-wok and numbing pepper.",
     description: "Hand-pulled and wok-tossed noodles with Sichuan pepper, garlic and black vinegar.",
-    image: unsplash("1569718212165-3a8278d5f624"),
+    image: "/images/categories/wok-noodles.jpg",
     comboRole: "main",
   },
   {
@@ -51,7 +50,7 @@ export const categories: Category[] = [
     name: "Curry House",
     tagline: "Slow gravies, fragrant rice, deep heat.",
     description: "Regional curries simmered for hours and served with basmati or flaky parotta.",
-    image: unsplash("1588166524941-3bf61a9c41db"),
+    image: "/images/categories/curry-house.jpg",
     comboRole: "main",
   },
   {
@@ -59,7 +58,7 @@ export const categories: Category[] = [
     name: "Sides & Snacks",
     tagline: "The supporting cast that steals scenes.",
     description: "Fries, bites and small plates built for sharing (or not).",
-    image: unsplash("1573080496219-bb080dd4f877"),
+    image: "/images/categories/sides.jpg",
     comboRole: "side",
   },
   {
@@ -67,7 +66,7 @@ export const categories: Category[] = [
     name: "Coolers",
     tagline: "Built to tame the flame.",
     description: "House-made coolers, lassis and sodas to put out the fire.",
-    image: unsplash("1556679343-c7306c1976bc"),
+    image: "/images/categories/coolers.jpg",
     comboRole: "drink",
   },
   {
@@ -75,7 +74,7 @@ export const categories: Category[] = [
     name: "Sweets",
     tagline: "A cool finish after the heat.",
     description: "Desserts with a twist — some sweet, some sneakily spicy.",
-    image: unsplash("1563805042-7684c019e1cb"),
+    image: "/images/categories/sweets.jpg",
     comboRole: null,
   },
 ];
@@ -105,24 +104,24 @@ const drinkSizes: SizeOption[] = [
 ];
 
 type Seed = Omit<Dish, "id" | "slug" | "image" | "addOns" | "sizes" | "diet" | "badges" | "spiceAdjustable"> &
-  Partial<Pick<Dish, "addOns" | "sizes" | "diet" | "badges" | "spiceAdjustable">> & { photo: string };
+  Partial<Pick<Dish, "addOns" | "sizes" | "diet" | "badges" | "spiceAdjustable">>;
 
 function make(seed: Seed): Dish {
   const slug = seed.name
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
-  const { photo, ...rest } = seed;
   return {
     id: slug,
     slug,
-    image: unsplash(photo),
+    // Photos live in public/images/dishes, named after the dish (see public/images/CREDITS.md).
+    image: `/images/dishes/${slug}.jpg`,
     addOns: [],
     sizes: [],
     diet: [],
     badges: [],
     spiceAdjustable: true,
-    ...rest,
+    ...seed,
   };
 }
 
@@ -135,7 +134,6 @@ export const dishes: Dish[] = [
     story:
       "Our signature. Thigh meat marinated overnight in gochugaru and garlic, seared until the edges blister, then piled over sticky rice with crunchy pickles and a spoon of house chili crisp.",
     price: 349,
-    photo: "1546069901-ba9599a7e63c",
     rating: 4.8,
     reviewCount: 1284,
     spice: 3,
@@ -154,7 +152,6 @@ export const dishes: Dish[] = [
     story:
       "A bright, herby bowl with a sneaky green-chili tahini that warms from the back of the throat. Fully plant-based and properly filling.",
     price: 299,
-    photo: "1512621776951-a57141f2eefd",
     rating: 4.6,
     reviewCount: 612,
     spice: 2,
@@ -173,7 +170,6 @@ export const dishes: Dish[] = [
     story:
       "Paneer cubes kissed by the tandoor and tossed in a volcano masala, served over jeera rice with charred onions and a smoky makhani drizzle.",
     price: 319,
-    photo: "1540189549336-e6e99c3679fe",
     rating: 4.7,
     reviewCount: 904,
     spice: 4,
@@ -193,7 +189,6 @@ export const dishes: Dish[] = [
     story:
       "Juicy prawns glazed with smoked chipotle and honey over cilantro-lime rice, black beans and corn charred on the plancha.",
     price: 429,
-    photo: "1547592180-85f173990554",
     rating: 4.5,
     reviewCount: 311,
     spice: 3,
@@ -214,7 +209,6 @@ export const dishes: Dish[] = [
     story:
       "Two crisp-edged patties, ghost-pepper jack melting into every crevice, and a fermented chili mayo with real depth. Not for the faint-hearted.",
     price: 389,
-    photo: "1568901346375-23c9450c58cd",
     rating: 4.9,
     reviewCount: 2210,
     spice: 5,
@@ -232,7 +226,6 @@ export const dishes: Dish[] = [
     story:
       "The burger that started it all — one thin, crispy patty, gooey American cheese and a sticky smoked onion jam that ties it together.",
     price: 289,
-    photo: "1550547660-d9450f859349",
     rating: 4.7,
     reviewCount: 1530,
     spice: 1,
@@ -249,7 +242,6 @@ export const dishes: Dish[] = [
     story:
       "Buttermilk-fried thigh painted with a glossy cayenne lacquer, cooled down by crunchy slaw and sweet pickles.",
     price: 329,
-    photo: "1571091718767-18b5b1457add",
     rating: 4.8,
     reviewCount: 1802,
     spice: 4,
@@ -267,7 +259,6 @@ export const dishes: Dish[] = [
     story:
       "A crisp potato-and-pea patty smashed thin on the grill, then stacked with sriracha slaw and a nest of crispy shallots.",
     price: 249,
-    photo: "1553979459-d2229ba7433b",
     rating: 4.4,
     reviewCount: 640,
     spice: 3,
@@ -287,7 +278,6 @@ export const dishes: Dish[] = [
     story:
       "Marinated pork carved straight off the trompo, with charred pineapple and a habanero salsa that sneaks up on you.",
     price: 339,
-    photo: "1565299585323-38d6b0865b47",
     rating: 4.8,
     reviewCount: 990,
     spice: 5,
@@ -304,7 +294,6 @@ export const dishes: Dish[] = [
     short: "Beer-battered fish, chipotle crema, lime slaw.",
     story: "Crisp beer-battered fish with smoky chipotle crema and a sharp lime slaw. A beach-shack classic.",
     price: 359,
-    photo: "1551504734-5ee1c4a1479b",
     rating: 4.6,
     reviewCount: 520,
     spice: 2,
@@ -321,7 +310,6 @@ export const dishes: Dish[] = [
     story:
       "Goat braised for six hours in guajillo and ancho chilies, griddled in its own fat with cheese, and served with a cup of rich consommé for dunking.",
     price: 399,
-    photo: "1599974579688-8dbdd335c77f",
     rating: 4.9,
     reviewCount: 1120,
     spice: 3,
@@ -338,7 +326,6 @@ export const dishes: Dish[] = [
     short: "Smoky mushrooms, salsa macha, pickled onion, queso.",
     story: "Wood-fire charred mushrooms with a nutty salsa macha, pickled red onions and crumbled queso.",
     price: 289,
-    photo: "1613514785940-daed07799d9b",
     rating: 4.5,
     reviewCount: 388,
     spice: 3,
@@ -358,7 +345,6 @@ export const dishes: Dish[] = [
     short: "Classic buffalo, blue cheese, celery crunch.",
     story: "Smoked then fried for a shattering crust, tossed in our tangy buffalo sauce. The benchmark wing.",
     price: 329,
-    photo: "1527477396000-e27163b481c2",
     rating: 4.7,
     reviewCount: 1460,
     spice: 3,
@@ -376,7 +362,6 @@ export const dishes: Dish[] = [
     short: "Sticky gochujang glaze, sesame, scallion.",
     story: "A glossy sweet-spicy gochujang glaze with toasted sesame. Dangerously snackable.",
     price: 349,
-    photo: "1608039829572-78524f79c4c7",
     rating: 4.8,
     reviewCount: 1210,
     spice: 3,
@@ -394,7 +379,6 @@ export const dishes: Dish[] = [
     story:
       "Made with Carolina Reaper mash and a whisper of mango. Finish six and your name goes on the (fictional) Wall of Flame.",
     price: 399,
-    photo: "1562967914-608f82629710",
     rating: 4.3,
     reviewCount: 402,
     spice: 5,
@@ -413,7 +397,6 @@ export const dishes: Dish[] = [
     short: "Charcoal-grilled skewers, lemon, garlic, bird's-eye chili.",
     story: "Bird's-eye chili, lemon and garlic marinade, grilled over charcoal and served with charred lemon.",
     price: 369,
-    photo: "1555939594-58d7cb561ad1",
     rating: 4.6,
     reviewCount: 702,
     spice: 4,
@@ -433,7 +416,6 @@ export const dishes: Dish[] = [
     story:
       "Springy wheat noodles in a nutty sesame and chili oil sauce, crowned with crispy minced pork and a tingle of Sichuan pepper.",
     price: 319,
-    photo: "1569718212165-3a8278d5f624",
     rating: 4.8,
     reviewCount: 980,
     spice: 4,
@@ -452,7 +434,6 @@ export const dishes: Dish[] = [
     short: "Smoky wok-tossed noodles, burnt garlic, chili.",
     story: "Indo-Chinese street style — burnt garlic, green chilies and plenty of wok hei.",
     price: 259,
-    photo: "1585032226651-759b368d7246",
     rating: 4.5,
     reviewCount: 840,
     spice: 3,
@@ -470,7 +451,6 @@ export const dishes: Dish[] = [
     short: "Pork & chive dumplings in black vinegar chili oil.",
     story: "Eight silky dumplings drowned in our aromatic chili oil with black vinegar and crushed peanuts.",
     price: 289,
-    photo: "1617093727343-374698b1b08d",
     rating: 4.9,
     reviewCount: 1350,
     spice: 3,
@@ -488,7 +468,6 @@ export const dishes: Dish[] = [
     short: "Wide rice noodles, holy basil, bird's-eye chili.",
     story: "Pad kee mao the way it should be: smoky, fragrant with holy basil and generously hot.",
     price: 299,
-    photo: "1559314809-0d155014e29e",
     rating: 4.6,
     reviewCount: 560,
     spice: 4,
@@ -508,7 +487,6 @@ export const dishes: Dish[] = [
     story:
       "Charcoal-smoked chicken tikka simmered in a velvet tomato and butter gravy, finished with dhungar smoke and kasuri methi.",
     price: 379,
-    photo: "1588166524941-3bf61a9c41db",
     rating: 4.9,
     reviewCount: 2400,
     spice: 2,
@@ -526,7 +504,6 @@ export const dishes: Dish[] = [
     short: "Black pepper, kalpasi and roasted coconut masala.",
     story: "A fiery South Indian classic built on freshly roasted spices — black pepper, star anise and kalpasi.",
     price: 389,
-    photo: "1565557623262-b51c2513a641",
     rating: 4.8,
     reviewCount: 870,
     spice: 4,
@@ -545,7 +522,6 @@ export const dishes: Dish[] = [
     story:
       "Long-grain basmati and marinated chicken sealed and slow-cooked on dum, served with mirchi ka salan and raita.",
     price: 399,
-    photo: "1563379091339-03b21ab4a4f8",
     rating: 4.9,
     reviewCount: 3100,
     spice: 3,
@@ -563,7 +539,6 @@ export const dishes: Dish[] = [
     short: "Mixed veg in a fiery Kolhapuri masala.",
     story: "Seasonal vegetables in a robust Kolhapuri masala with dry coconut and sesame. Proper heat.",
     price: 299,
-    photo: "1603894584373-5ac82b2ae398",
     rating: 4.5,
     reviewCount: 410,
     spice: 5,
@@ -583,7 +558,6 @@ export const dishes: Dish[] = [
     short: "Crinkle fries, peri-peri dust, cheese sauce.",
     story: "Crinkle-cut fries shaken in peri-peri masala and drowned in a molten cheese sauce.",
     price: 179,
-    photo: "1573080496219-bb080dd4f877",
     rating: 4.7,
     reviewCount: 1900,
     spice: 2,
@@ -601,7 +575,6 @@ export const dishes: Dish[] = [
     short: "Crisp samosas with green chili and three cheeses.",
     story: "A playful twist: flaky samosas stuffed with green chili, mozzarella, cheddar and paneer.",
     price: 149,
-    photo: "1601050690597-df0568f70950",
     rating: 4.6,
     reviewCount: 760,
     spice: 2,
@@ -618,7 +591,6 @@ export const dishes: Dish[] = [
     short: "Corn ribs, chili-lime butter, cotija.",
     story: "Corn cut into ribs, charred until they curl and brushed with chili-lime butter.",
     price: 169,
-    photo: "1541592106381-b31e9677c0e5",
     rating: 4.4,
     reviewCount: 290,
     spice: 2,
@@ -636,7 +608,6 @@ export const dishes: Dish[] = [
     short: "Crispy kimchi rice croquettes, gochujang mayo.",
     story: "Golden croquettes of kimchi fried rice with a molten cheese centre and gochujang mayo.",
     price: 189,
-    photo: "1639024471283-03518883512d",
     rating: 4.5,
     reviewCount: 340,
     spice: 2,
@@ -655,7 +626,6 @@ export const dishes: Dish[] = [
     short: "Alphonso mango, yoghurt, cardamom.",
     story: "The ultimate fire extinguisher — thick, cold and fragrant with cardamom.",
     price: 129,
-    photo: "1556679343-c7306c1976bc",
     rating: 4.8,
     reviewCount: 1700,
     spice: 1,
@@ -674,7 +644,6 @@ export const dishes: Dish[] = [
     short: "Watermelon, mint, black salt, a hint of chili.",
     story: "Fresh watermelon pressed to order with mint and black salt — with a tiny chili rim if you dare.",
     price: 119,
-    photo: "1544145945-f90425340c7e",
     rating: 4.6,
     reviewCount: 640,
     spice: 1,
@@ -691,7 +660,6 @@ export const dishes: Dish[] = [
     short: "Fresh ginger, lime, fizzy and sharp.",
     story: "House-brewed ginger syrup, fresh lime and soda. Clean, sharp and refreshing.",
     price: 99,
-    photo: "1622483767028-3f66f32aef97",
     rating: 4.5,
     reviewCount: 520,
     spice: 1,
@@ -709,7 +677,6 @@ export const dishes: Dish[] = [
     short: "Single-origin cold brew over tonic and orange.",
     story: "Eighteen-hour cold brew poured over tonic with a twist of orange peel.",
     price: 159,
-    photo: "1497534446932-c925b458314e",
     rating: 4.4,
     reviewCount: 230,
     spice: 1,
@@ -729,7 +696,6 @@ export const dishes: Dish[] = [
     short: "Molten dark chocolate with a slow chili finish.",
     story: "70% dark chocolate with ancho chili and cinnamon. Warm, molten, and quietly fiery.",
     price: 199,
-    photo: "1551024601-bec78aea704b",
     rating: 4.9,
     reviewCount: 1100,
     spice: 2,
@@ -747,7 +713,6 @@ export const dishes: Dish[] = [
     short: "Saffron-pistachio kulfi, rose syrup, crushed nuts.",
     story: "Dense saffron-pistachio kulfi sliced and stacked with rose syrup and crushed pistachio.",
     price: 169,
-    photo: "1563805042-7684c019e1cb",
     rating: 4.7,
     reviewCount: 680,
     spice: 1,
@@ -764,7 +729,6 @@ export const dishes: Dish[] = [
     short: "Cinnamon churros, goat milk caramel, chili sugar.",
     story: "Crisp churros rolled in a chili-cinnamon sugar with a pot of warm cajeta for dipping.",
     price: 179,
-    photo: "1488477181946-6428a0291777",
     rating: 4.6,
     reviewCount: 450,
     spice: 2,
@@ -780,7 +744,6 @@ export const dishes: Dish[] = [
     short: "Caramelised top, custardy centre, mango coulis.",
     story: "A deeply caramelised crust and a barely-set centre, with a bright mango coulis.",
     price: 219,
-    photo: "1565958011703-44f9829ba187",
     rating: 4.8,
     reviewCount: 590,
     spice: 1,
